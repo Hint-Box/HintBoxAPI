@@ -1,20 +1,16 @@
-class Project:
-    def __init__(self, id, name, url, githubURL, created_at, description="", tags=""):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.tags = tags
-        self.url = url
-        self.githubURL = githubURL
-        self.created_at = created_at
+import requests
 
-    def __str__(self):
-        data = {}
-        data["id"] = self.id
-        data["name"] = self.name
-        data["description"] = self.description
-        data["tags"] = self.tags
-        data["url"] = self.url
-        data["githubURL"] = self.githubURL
-        data["created_at"] = self.created_at
-        return str(data)
+response = requests.get('https://api.github.com/orgs/Hint-Box/repos')
+
+projects = [pro for pro in response.json()]
+
+hint_projects = [{
+    "id": projects[0]["id"],
+    "name": projects[0]["name"],
+    "url": projects[0]["url"],
+    "githubURL": projects[0]["html_url"],
+    "created_at": projects[0]["created_at"],
+    "description": projects[0]["description"],
+    "tags": requests.get('https://api.github.com/repos/Hint-Box/HintBoxAPI/tags').json(),
+    "contributors": requests.get('https://api.github.com/repos/Hint-Box/HintBoxAPI/contributors').json()
+}]
